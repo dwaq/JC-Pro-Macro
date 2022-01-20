@@ -247,6 +247,11 @@ void volume(){ //works with new code
   if (SW2 == 0) { // speaker mute
         Consumer.write(MEDIA_VOLUME_MUTE);
       }
+  if (SW1 == 0) { // power toys run
+        Keyboard.press(KEY_LEFT_ALT);        
+        Keyboard.press(KEY_SPACE);    
+        Keyboard.releaseAll();
+      }
 screen();
 }
 
