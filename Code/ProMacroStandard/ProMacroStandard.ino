@@ -223,34 +223,53 @@ void volume(){ //works with new code
         Keyboard.press(KEY_LEFT_WINDOWS);
         Keyboard.press(KEY_DOWN_ARROW);          
         Keyboard.releaseAll();
-        delay(50);
+        // wait for release
+        while(digitalRead(A3) == 0) {
+          delay(50);
+        }
       }
   if (SW5 == 0){ // show desktop
         Keyboard.press(KEY_LEFT_WINDOWS);
         Keyboard.press(KEY_D);
         Keyboard.releaseAll();
-        delay(50);
+        // wait for release
+        while(digitalRead(A2) == 0) {
+          delay(50);
+        }
       }
-        delay(100);
   if (SW4 == 0) { // print screen
         Keyboard.press(KEY_PRINTSCREEN);
         Keyboard.releaseAll();
+        // wait for release
+        while(digitalRead(A1) == 0) {
+          delay(50);
+        }
       }
-        delay(50);
   if (SW3 == 0) { // microphone mute (PowerToys)
         Keyboard.press(KEY_LEFT_WINDOWS);
         Keyboard.press(KEY_LEFT_SHIFT);
         Keyboard.press(KEY_A);
         Keyboard.releaseAll();
+        // wait for release
+        while(digitalRead(A0) == 0) {
+          delay(50);
+        }
       }
-        delay(50);
   if (SW2 == 0) { // speaker mute
         Consumer.write(MEDIA_VOLUME_MUTE);
+        // wait for release
+        while(digitalRead(15) == 0) {
+          delay(50);
+        }
       }
   if (SW1 == 0) { // power toys run
         Keyboard.press(KEY_LEFT_ALT);        
         Keyboard.press(KEY_SPACE);    
         Keyboard.releaseAll();
+        // wait for release
+        while(digitalRead(4) == 0) {
+          delay(50);
+        }
       }
 screen();
 }
