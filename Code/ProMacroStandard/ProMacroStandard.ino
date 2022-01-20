@@ -48,8 +48,9 @@ int inputModeIndex = 0;
 int modeArrayLength = (sizeof(modeArray) / sizeof(modeArray[0]));
 
 // Encoder setup =============================================
-
+// from: https://github.com/PaulStoffregen/Encoder
 #include <Encoder.h>
+// from: https://github.com/NicoHood/HID
 #include <HID-Project.h>
 Encoder myEnc(0,1); //if rotation is backwards, swap 0 and 1
 
