@@ -219,30 +219,33 @@ void volume(){ //works with new code
         decrement = 0;
         //delay(10);
       }
-  if (SW6 == 0){ //tab to next browser tab Firefox or Chrome
-        Keyboard.press(KEY_LEFT_CTRL);
-        Keyboard.press(KEY_TAB);          
+  if (SW6 == 0){ // minimize window
+        Keyboard.press(KEY_LEFT_WINDOWS);
+        Keyboard.press(KEY_DOWN_ARROW);          
         Keyboard.releaseAll();
         delay(50);
       }
-  if (SW5 == 0){ //tab to previous browser tab Firefox or Chrome
-        Keyboard.press(KEY_LEFT_SHIFT);
-        Keyboard.press(KEY_LEFT_CTRL);
-        Keyboard.press(KEY_TAB);
+  if (SW5 == 0){ // show desktop
+        Keyboard.press(KEY_LEFT_WINDOWS);
+        Keyboard.press(KEY_D);
         Keyboard.releaseAll();
         delay(50);
       }
-  if (SW4 == 0) {
-        Consumer.write(MEDIA_PLAY_PAUSE); 
         delay(100);
+  if (SW4 == 0) { // print screen
+        Keyboard.press(KEY_PRINTSCREEN);
+        Keyboard.releaseAll();
       }
-  if (SW3 == 0) {
-        Consumer.write(MEDIA_NEXT);
         delay(50);
+  if (SW3 == 0) { // microphone mute (PowerToys)
+        Keyboard.press(KEY_LEFT_WINDOWS);
+        Keyboard.press(KEY_LEFT_SHIFT);
+        Keyboard.press(KEY_A);
+        Keyboard.releaseAll();
       }
-  if (SW2 == 0) {
-        Consumer.write(MEDIA_PREVIOUS);
         delay(50);
+  if (SW2 == 0) { // speaker mute
+        Consumer.write(MEDIA_VOLUME_MUTE);
       }
 screen();
 }
