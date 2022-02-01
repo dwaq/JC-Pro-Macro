@@ -43,9 +43,9 @@ long oldPulseTime = 0;
 int fanRPM = 0;
 char toneNote;
 
-int modeArray[] = {0}; //adjust this array to modify sequence of modes - as written, change to {0, 1, 2, 3, 4, 5} to access all modes
-int inputModeIndex = 0;
-int modeArrayLength = (sizeof(modeArray) / sizeof(modeArray[0]));
+//int modeArray[] = {0}; //adjust this array to modify sequence of modes - as written, change to {0, 1, 2, 3, 4, 5} to access all modes
+//int inputModeIndex = 0;
+//int modeArrayLength = (sizeof(modeArray) / sizeof(modeArray[0]));
 
 // Encoder setup =============================================
 // from: https://github.com/PaulStoffregen/Encoder
@@ -164,32 +164,33 @@ void loop() {
 
 //=========change mode=================
 
-   if ((SW6 == 0) && (SW5 == 0)){ 
-      if (inputModeIndex < modeArrayLength){
-        inputModeIndex++;
-        inputMode = modeArray[inputModeIndex];
-      }
-      if (inputModeIndex == modeArrayLength){
-        inputModeIndex = 0;
-        inputMode = modeArray[inputModeIndex];
-      }
-      SW6 = 1;
-      SW5 = 1;
-      delay(250);
-    }
+//   if ((SW6 == 0) && (SW5 == 0)){ 
+//      if (inputModeIndex < modeArrayLength){
+//        inputModeIndex++;
+//        inputMode = modeArray[inputModeIndex];
+//      }
+//      if (inputModeIndex == modeArrayLength){
+//        inputModeIndex = 0;
+//        inputMode = modeArray[inputModeIndex];
+//      }
+//      SW6 = 1;
+//      SW5 = 1;
+//      delay(250);
+//    }
 
 //================================
 
 //screen(); //need to change to only call within functions
 
 //======select input mode:=======
-
-if (inputMode == 0) volume();
-if (inputMode == 1) jiggler();
-if (inputMode == 2) slitherIO();
-if (inputMode == 3) FCPX();
-if (inputMode == 4) fan();
-if (inputMode == 5) music();
+// only use volume mode
+volume();
+//if (inputMode == 0) volume();
+//if (inputMode == 1) jiggler();
+//if (inputMode == 2) slitherIO();
+//if (inputMode == 3) FCPX();
+//if (inputMode == 4) fan();
+//if (inputMode == 5) music();
 
 //Serial.println(inputMode);
 
@@ -275,356 +276,4 @@ void volume(){ //works with new code
           delay(50);
         }
       }
-screen();
-}
-
-void jiggler(){ //works with new code
-  
-  Serial.print("commence to jiggling");
-      //Consumer.write(MEDIA_VOLUME_UP);
-      //Consumer.write(MEDIA_VOLUME_DOWN);
-      long randNumber = random(-50, 50);
-      long randNumber1 = random(-50, 50);
-      long randNumber2 = random(-50, 50);
-      Mouse.move(randNumber, randNumber1);
-      delay(100);
-      int xMap = map(randNumber, -50, 50, 0, 100);
-      int yMap = map(randNumber1, -50, 50, 0, 100);
-      int zMap = map(randNumber2, -50, 50, 0, 100);
-      pixels.setPixelColor(0, pixels.Color(xMap, yMap, zMap));
-      pixels.setPixelColor(2, pixels.Color(zMap,xMap,yMap));
-      pixels.setPixelColor(1, pixels.Color(yMap, zMap, xMap));
-      pixels.setPixelColor(3, pixels.Color(xMap, zMap, yMap));           
-      pixels.show(); // Show results
-
-screenJiggle(); 
-    
-}
-
-void slitherIO(){ //works with new code
-//movement tracking
-int xMovements[] = {-3, -8, -14, -16, -19, -19, -16, -14, -8, -3, 3, 8, 14, 16, 19, 19, 16, 14, 8, 3, -3};
-int yMovements[] = {19, 16, 14, 8, 3, -3, -8, -14, -16, -19, -19, -16, -14, -8, -3, 3, 8, 14, 16, 19, 19};
-int multiplier = 2; //changes speed of rotation
-
-//homing routine =====================================================  
-  if (SW6 == 0){
-    Mouse.move(40, 10); //was 60, 0 before
-    counter = 0;
-    delay(250);
-  }
-
-//mouse move routine==================================================
-
-  if (increment == 1) {
-    //need a routine to loop back to zero etc to loop around the x/y movements for each increment
-
-      for(int i=0; i< multiplier; i++){
-        if (counter == 20) counter = 1;
-        else if (counter < 20) ++counter;
-        Mouse.move(xMovements[counter], yMovements[counter]);
-        
-        Serial.print(counter); Serial.print(" "); Serial.print(xMovements[counter]); Serial.print(" "); Serial.println(yMovements[counter]);
-        increment = 0;
-        decrement = 0;
-      }
-  }
-  
-
-    if (decrement == 1) { //increment and decrement work fine individually, but don't line up when reversed
-      for(int i=0; i< multiplier; i++){     
-        if (counter == 0) counter = 19; 
-        else if (counter > 0) --counter;       
-        Mouse.move(-xMovements[counter+1], -yMovements[counter+1]);
-
-        Serial.print(counter); Serial.print(" "); Serial.print(-xMovements[counter+1]); Serial.print(" "); Serial.println(-yMovements[counter+1]);
-        increment = 0;
-        decrement = 0;
-      }
-  }
-
-//worm speed input==============================
-
-if ((SW2 == 0)||(SW3 == 0)||(SW4 ==0)){
-        Keyboard.press(HID_KEYBOARD_SPACEBAR);       
-        delay(5);
-}
-
-if ((SW2 == 1) && (SW3 == 1) && (SW4 == 1)){
-        Keyboard.releaseAll();
-        delay(5);
-}
-
-//worm auto turn input - NASCAR mode: all left turns
-
-if ((SW5 == 0) && (nascar == 0)){
-  nascar = 1;
-  delay(20);
-}
-
-else if ((SW5 == 0) && (nascar ==1)){
-  nascar = 0;
-  delay(20);
-}
-
-if (nascar == 1){
-  newNascarTurnTime = millis();
-  if ((newNascarTurnTime - oldNascarTurnTime) > 200){
-    decrement = 1;
-    oldNascarTurnTime = newNascarTurnTime;
-  }
-}
-
-
-screen();
-  
-}
-
-void FCPX(){ //works with new code
-  
-  if (increment == 1) {
-        //Keyboard.press(KEY_K);
-        //Keyboard.releaseAll();       
-        Keyboard.press(HID_KEYBOARD_RIGHTARROW);
-        Keyboard.releaseAll();
-        if (LEDLight == 3) LEDLight = 0;
-        else if (LEDLight < 3) LEDLight += 1;
-        pixels.clear();
-        pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(0, 10, 0));
-        pixels.show(); // Show results
-        increment = 0;
-        decrement = 0;
-        //delay(50);
-      }
-      
-  else if (decrement == 1) {
-        //Keyboard.press(KEY_K);
-        //Keyboard.releaseAll();  
-        Keyboard.press(HID_KEYBOARD_LEFTARROW);
-        Keyboard.releaseAll();
-        if (LEDLight == 0) LEDLight = 3;
-        else if (LEDLight > 0) LEDLight -= 1;
-        pixels.clear();
-        pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(0, 10, 0));
-        pixels.show(); // Show results
-        increment = 0;
-        decrement = 0;
-        //delay(50);
-      }
-  else if (SW6 == 0){ //Zoom in
-        Keyboard.press(KEY_LEFT_WINDOWS);
-        Keyboard.press(HID_KEYBOARD_EQUALS_AND_PLUS);    
-        Keyboard.releaseAll();
-        delay(50);
-      }
-  else if (SW5 == 0){ //Zoom out
-        Keyboard.press(KEY_LEFT_WINDOWS);
-        Keyboard.press(HID_KEYBOARD_MINUS_AND_UNDERSCORE);    
-        Keyboard.releaseAll();
-        delay(50);
-      }
-  else if (SW4 == 0) { //fwd
-        Keyboard.press(KEY_L);
-        Keyboard.releaseAll();
-        delay(50);
-      }
-  else if (SW3 == 0) { //stop
-        Keyboard.press(KEY_K);
-        Keyboard.releaseAll();
-        delay(50);
-      }
-  else if (SW2 == 0) { //BACK
-        Keyboard.press(KEY_J);
-        Keyboard.releaseAll();
-        delay(50);
-      }
-  else if (SW1 == 0) { //break all win + shift + b
-        Keyboard.press(KEY_LEFT_WINDOWS);        
-        Keyboard.press(KEY_LEFT_SHIFT);
-        Keyboard.press(KEY_B);        
-        Keyboard.releaseAll();
-        delay(50);
-      }
-screenFCPX();
-}
-
-void fan(){
-  if (SW6 == 0){
-    if (fanSpeed < 5){
-    ++fanSpeed;
-    }
-    delay(20);
-  }
-  if (SW5 == 0){
-    if (fanSpeed > 0){
-    --fanSpeed;
-    }
-    delay(20);
-  }
-int fanSpeedScaled = map(fanSpeed, 0, 5, 0, 255);
-analogWrite(6, fanSpeedScaled);
-//Serial.print(fanSpeed); Serial.print(" "); Serial.println(fanSpeedScaled);
-
-if(fanPulse == 0){
-  newPulseTime = millis();
-  fanRPM = (newPulseTime - oldPulseTime);
-  oldPulseTime = newPulseTime;
-}
-
-screenFan();
-
-}
-
-void music(){
-
-//attach small buzzer to pin 6 on aux jack
-//
-
-pinMode(7, OUTPUT);
-digitalWrite(7, LOW);
-
-  if (SW6 == 0){
-    tone(6, 440, 100); //A4
-    toneNote = 'A';
-  }
-  else if (SW5 == 0){
-    tone(6, 494, 100); //B4
-    toneNote = 'B';
-  }
-  else if (SW4 == 0){
-    tone(6, 523, 100); //C5
-    toneNote = 'C';
-  }  
-  else if (SW3 == 0){
-    tone(6, 587, 100); //D5
-    toneNote = 'D';
-  }
-  else if (SW2 == 0){
-    tone(6, 659, 100); //E5
-    toneNote = 'E';
-  }
-  else {
-    toneNote = ' ';
-  }
-  
-  if ((SW1 == 0) && (beatOn == 0)) {
-    beatOn = 1;
-    delay(100);
-  }
-  else if ((SW1 == 0) && (beatOn == 1)){
-    beatOn = 0;
-    delay(100);
-  }
-  
-  if (beatOn == 1) {
-  newBeatTime = millis();
-  if ((newBeatTime - oldBeatTime) > 500){
-  digitalWrite(7, HIGH);
-  delay(35);
-  digitalWrite(7, LOW);
-    oldBeatTime = newBeatTime;
-  }
-  }
-
-  if (decrement == 1){
-  digitalWrite(7, HIGH);
-  delay(35);
-  digitalWrite(7, LOW);
-  increment = 0;
-  decrement = 0;
-  }
-
-  if (decrement == 1){
-  digitalWrite(7, HIGH);
-  delay(35);
-  digitalWrite(7, LOW);
-  increment = 0;
-  decrement = 0;
-  }
-
-  if (increment == 1){
-  digitalWrite(7, HIGH);
-  delay(35);
-  digitalWrite(7, LOW);
-  increment = 0;
-  decrement = 0;
-  }
- 
-screenNote();
-}
-
-//======================.96" oled screen=======================
-
-void screen(){
-  display.clearDisplay();
-  display.invertDisplay(0);
-  display.setCursor(0,10);
-  display.print(increment);
-  display.print(decrement);
-  display.print(" ");
-  display.print(newPosition);
-  display.println(LEDLight);
-  display.print(SW1);
-  display.print(SW2);
-  display.print(SW3);
-  display.print(SW4);
-  display.print(SW5);
-  display.print(SW6);
-  display.print(inputMode);
-  display.display();
-  //Serial.println(SW1);
-  //delay(10);
-}
-
-void screenFan(){
-  display.clearDisplay();
-  display.invertDisplay(0);
-  display.setCursor(0,10);
-  display.print("Fan ");
-  display.print(fanSpeed);
-  display.print(" ");
-  display.println(fanPulse);
-  display.print("T ");
-  display.print(fanRPM);
-  display.print(" ");
-  display.print(inputMode);
-  display.display();
-  //Serial.println(SW1);
-  //delay(10);
-}
-
-void screenJiggle(){
-  display.clearDisplay();
-  display.invertDisplay(0);
-  display.setCursor(0,10);
-  display.println("Rando");
-  display.print("Mouse!");
-  display.display();
-}
-
-void screenNote(){ //now used for notes
-  display.clearDisplay();
-  display.invertDisplay(0);
-  display.setCursor(0,10);
-  display.print("TONE ");
-  display.println(toneNote);
-  display.print(SW1);
-  display.print(SW2);
-  display.print(SW3);
-  display.print(SW4);
-  display.print(SW5);
-  display.print(SW6);
-  display.print(inputMode); 
-  display.display();
-  //Serial.println(SW1);
-  //delay(10);
-}
-
-void screenFCPX(){
-  display.clearDisplay();
-  display.invertDisplay(0);
-  display.setCursor(0,10);
-  display.println("FCPX");
-  display.print("Sh0rcut");
-  display.display();
 }
