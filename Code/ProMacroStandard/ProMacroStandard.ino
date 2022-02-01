@@ -89,6 +89,9 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 #define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
 
+// for rainbow color
+long firstPixelHue = 0;
+
 //============================================================
 
 void setup() {
@@ -137,6 +140,7 @@ Keyboard.begin();
     pixels.setPixelColor(i, pixels.Color(10, 0, 0));
   }
   pixels.show(); // Show results
+  pixels.setBrightness(20); // (max = 255)
 }
 
 
@@ -194,17 +198,22 @@ volume();
 
 //Serial.println(inputMode);
 
+// Display a rainbow while it's waiting
+pixels.rainbow(firstPixelHue);
+pixels.show();
+delay(10);
+firstPixelHue += 256; // increase "color"
 }
 
 void volume(){ //works with new code
 
   if (increment == 1) {
         Consumer.write(MEDIA_VOLUME_UP);
-        if (LEDLight == 3) LEDLight = 0;
-        else if (LEDLight < 3) LEDLight += 1;
-        pixels.clear();
-        pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(10, 0, 0));
-        pixels.show(); // Show results
+        //if (LEDLight == 3) LEDLight = 0;
+        //else if (LEDLight < 3) LEDLight += 1;
+        //pixels.clear();
+        //pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(10, 0, 0));
+        //pixels.show(); // Show results
         increment = 0;
         decrement = 0;
         //delay(10);
@@ -212,11 +221,11 @@ void volume(){ //works with new code
       
   if (decrement == 1) {
         Consumer.write(MEDIA_VOLUME_DOWN);
-        if (LEDLight == 0) LEDLight = 3;
-        else if (LEDLight > 0) LEDLight -= 1;
-        pixels.clear();
-        pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(10, 0, 0));
-        pixels.show(); // Show results
+        //if (LEDLight == 0) LEDLight = 3;
+        //else if (LEDLight > 0) LEDLight -= 1;
+        //pixels.clear();
+        //pixels.setPixelColor(LEDCircle[LEDLight], pixels.Color(10, 0, 0));
+        //pixels.show(); // Show results
         increment = 0;
         decrement = 0;
         //delay(10);
