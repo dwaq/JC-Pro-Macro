@@ -11,4 +11,4 @@ https://www.iconfinder.com/
 https://www.pngtosvg.com/
 https://cloudconvert.com/svg-to-dxf
 
-Printed with supports (PrusaSlicer settings file in STL directory).
+Printed with painted-on supports (paint the whole bottom except for inside the cross where the key mounts). PrusaSlicer settings file in STL directory.
