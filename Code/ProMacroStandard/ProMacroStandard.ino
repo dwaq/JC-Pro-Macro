@@ -250,10 +250,10 @@ void volume(){ //works with new code
           delay(50);
         }
       }
-  if (SW3 == 0) { // microphone mute (PowerToys)
-        Keyboard.press(KEY_LEFT_WINDOWS);
+  if (SW3 == 0) { // microphone mute (Teams)
+        Keyboard.press(KEY_LEFT_CTRL);
         Keyboard.press(KEY_LEFT_SHIFT);
-        Keyboard.press(KEY_A);
+        Keyboard.press(KEY_M);
         Keyboard.releaseAll();
         // wait for release
         while(digitalRead(A0) == 0) {
@@ -267,8 +267,9 @@ void volume(){ //works with new code
           delay(50);
         }
       }
-  if (SW1 == 0) { // power toys run
-        Keyboard.press(KEY_LEFT_ALT);        
+  if (SW1 == 0) { // 1Password
+        Keyboard.press(KEY_LEFT_CTRL);
+        Keyboard.press(KEY_LEFT_SHIFT);      
         Keyboard.press(KEY_SPACE);    
         Keyboard.releaseAll();
         // wait for release
