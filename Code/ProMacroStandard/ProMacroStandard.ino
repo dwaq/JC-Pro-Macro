@@ -233,9 +233,8 @@ void volume(){ //works with new code
 
   // FYI, key codes are here: https://github.com/NicoHood/HID/blob/master/src/KeyboardLayouts/ImprovedKeylayouts.h
 
-  if (SW6 == 0){ // minimize window
-        Keyboard.press(KEY_LEFT_WINDOWS);
-        Keyboard.press(KEY_DOWN_ARROW);          
+  if (SW6 == 0){ // minimize window (in combination with AutoHotkey script: "AppsKey::WinMinimize, A")
+        Keyboard.press(KEY_APPLICATION);      
         Keyboard.releaseAll();
         // wait for release
         while(digitalRead(A3) == 0) {
