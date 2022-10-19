@@ -137,10 +137,10 @@ Keyboard.begin();
 
 
   for(int i=0; i<NUMPIXELS; i++){
-    pixels.setPixelColor(i, pixels.Color(10, 0, 0));
+    pixels.setPixelColor(i, pixels.Color(0, 0, 0));
   }
   pixels.show(); // Show results
-  pixels.setBrightness(20); // (max = 255)
+  pixels.setBrightness(0); // (max = 255)
 }
 
 
@@ -199,10 +199,10 @@ volume();
 //Serial.println(inputMode);
 
 // Display a rainbow while it's waiting
-pixels.rainbow(firstPixelHue);
-pixels.show();
-delay(10);
-firstPixelHue += 256; // increase "color"
+// pixels.rainbow(firstPixelHue);
+// pixels.show();
+// delay(10);
+// firstPixelHue += 256; // increase "color"
 }
 
 void volume(){ //works with new code
